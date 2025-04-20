@@ -18,7 +18,15 @@ class PelangganController extends Controller
         if(!$pelanggan){
             abort(404);
         }
-        return view('pelanggan.pelanggan', compact('pelanggan'));
+        return view('pelanggan.detail', compact('pelanggan'));
+    }
+
+    public function create() {
+        return view('pelanggan.create');
+    }
+    
+    public function store(Request $request) {
+        return redirect('/pelanggan')->with('success', 'Data pelanggan berhasil ditambahkan (dummy)');
     }
 
     public function edit($id) {
@@ -32,7 +40,7 @@ class PelangganController extends Controller
     
     public function delete($id) {
         $pelanggan = Pelanggan::find($id);
-        return view('pelanggan.hapus', compact('pelanggan'));
+        return view('pelanggan.delete', compact('pelanggan'));
     }
     
     public function destroy($id) {

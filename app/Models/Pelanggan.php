@@ -37,6 +37,12 @@ class Pelanggan
             'email' => 'Sahl@email.com', 
             'telepon' => '0852874920', 
             'keluhan' => 'Kipas Internal Tidak Berputar'],
+            [
+            'id' => 6, 
+            'nama' => 'Satria Ahmad Roif', 
+            'email' => 'Roif@email.com', 
+            'telepon' => '08123678241', 
+            'keluhan' => 'Ganti Thermal Paste'],
         ];
     }
 

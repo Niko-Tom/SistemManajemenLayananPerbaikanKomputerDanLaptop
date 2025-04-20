@@ -19,8 +19,12 @@ Route::get('/', function () {
 });
 
 Route::get('/pelanggan', [PelangganController::class, 'index']);
+Route::get('/pelanggan/create', [PelangganController::class, 'create']);
+Route::post('/pelanggan', [PelangganController::class, 'store']);
+
 Route::get('/pelanggan/{id}', [PelangganController::class, 'show']);
 Route::get('/pelanggan/{id}/edit', [PelangganController::class, 'edit']);
-Route::post('/pelanggan/{id}/update', [PelangganController::class, 'update']);
+Route::put('/pelanggan/{id}', [PelangganController::class, 'update']);
+
 Route::get('/pelanggan/{id}/delete', [PelangganController::class, 'delete']);
-Route::post('/pelanggan/{id}/destroy', [PelangganController::class, 'destroy']);
+Route::delete('/pelanggan/{id}', [PelangganController::class, 'destroy']);
