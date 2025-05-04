@@ -35,6 +35,22 @@ return [
 
     'connections' => [
 
+        'oracle' => [
+            'driver'        => 'oracle',
+            'tns'           => env('DB_TNS', ''),
+            'host'          => env('DB_HOST', 'localhost'),
+            'port'          => env('DB_PORT', '1521'),
+            'database'      => env('DB_DATABASE', 'XEPDB1'),
+            'username'      => env('DB_USERNAME', 'NIKOLAUS'),
+            'password'      => env('DB_PASSWORD', '231220011'),
+            'charset'       => 'AL32UTF8',
+            'prefix'        => '',
+            'prefix_schema' => env('DB_SCHEMA_PREFIX', ''),
+            'edition'        => 'ora$base',
+            'server_version' => '12c',
+            'service_name'  => env('DB_DATABASE', 'XEPDB1'),
+            ],
+
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
