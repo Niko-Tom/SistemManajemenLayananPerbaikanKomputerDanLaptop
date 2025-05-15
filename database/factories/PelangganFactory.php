@@ -17,10 +17,10 @@ class PelangganFactory extends Factory
     public function definition(): array
     {
         return [
-            'nama' => $this->faker->sentence,
-            'email' => $this->faker->sentence,
-            'telepon' => $this->faker->sentence,
-            'keluhan' => $this->faker->paragraphs(3, true),
+            'nama' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'telepon' => $this->faker->phoneNumber(),
+            'keluhan' => $this->faker->sentence(7),
             'created_at' => now(),
             'updated_at' => now(),
         ];
