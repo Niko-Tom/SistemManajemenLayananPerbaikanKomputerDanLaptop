@@ -26,7 +26,14 @@ class PelangganController extends Controller
 
     public function store(Request $request)
     {
-        Pelanggan::create($request->only(['nama', 'email', 'telepon', 'keluhan']));
+        $validated = $request->validate([
+            'nama' => 'required|string|min:10|max:30',
+            'email' => 'required|email|max:50',
+            'telepon' => 'required|string|min:11|max:15',
+            'keluhan' => 'nullable|string|max:100',
+        ]);
+
+        Pelanggan::create($validated);
         return redirect('/pelanggan')->with('success', 'Data berhasil ditambahkan');
     }
 
@@ -39,7 +46,13 @@ class PelangganController extends Controller
     public function update(Request $request, $id)
     {
         $pelanggan = Pelanggan::findOrFail($id);
-        $pelanggan->update($request->only(['nama', 'email', 'telepon', 'keluhan']));
+        $validated = $request->validate([
+            'nama' => 'required|string|min:10|max:30',
+            'email' => 'required|email|max:50',
+            'telepon' => 'required|string|min:11|max:15',
+            'keluhan' => 'nullable|string|max:100',
+        ]);
+        $pelanggan->update($validated);
         return redirect('/pelanggan')->with('success', 'Data berhasil diperbarui');
     }
 

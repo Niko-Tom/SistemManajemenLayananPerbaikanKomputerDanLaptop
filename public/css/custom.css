@@ -1,0 +1,31 @@
+#loader-overlay {
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: opacity 0.3s ease-in-out;
+}
+
+#loader-overlay {
+  position: fixed;
+  z-index: 2000;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+#loader-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+#loader-overlay img {
+  animation: bounce 0.8s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+

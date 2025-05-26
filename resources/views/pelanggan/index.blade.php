@@ -10,9 +10,16 @@
     <div class="alert alert-success">{{ session('success') }}</div>
   @endif
 
-  <a href="{{ url('/pelanggan/create') }}" class="btn btn-primary mb-3">+ Tambah Pelanggan</a>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{{ url('/pelanggan/create') }}" class="btn btn-primary">+ Tambah Pelanggan</a>
 
-  <div class="card shadow">
+    <form action="{{ url('/pelanggan') }}" method="GET" class="form-inline">
+      <input type="text" name="search" class="form-control mr-2" placeholder="Cari Pelanggan" value="{{ request('search') }}">
+      <button type="submit" class="btn btn-outline-secondary">Cari</button>
+    </form>
+  </div>
+
+  <div class="card shadow" style="max-height: 500px; overflow-y: auto;">
     <div class="card-body p-0">
       <table class="table table-bordered table-hover mb-0">
         <thead class="table-light">
@@ -24,7 +31,7 @@
           </tr>
         </thead>
         <tbody>
-          @foreach ($pelanggan as $p)
+          @forelse ($pelanggan as $p)
           <tr>
             <td>{{ $p->id }}</td>
             <td>{{ $p->nama }}</td>
@@ -35,7 +42,11 @@
               <a href="{{ url('/pelanggan/'.$p->id.'/delete') }}" class="btn btn-danger btn-sm">Hapus</a>
             </td>
           </tr>
-          @endforeach
+          @empty
+          <tr>
+            <td colspan="4" class="text-center">Data tidak ditemukan.</td>
+          </tr>
+          @endforelse
         </tbody>
       </table>
     </div>

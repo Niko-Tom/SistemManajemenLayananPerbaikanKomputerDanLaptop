@@ -1,7 +1,7 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-primary elevation-5">
   <!-- Brand Logo -->
   <a href="/pelanggan" class="brand-link">
-    <img src="{{ asset('img/servicecomputer.jpg') }}" alt="Admin Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+    <img src="{{ asset('dist/img/servicecomputer.jpg') }}" alt="Admin Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
     <span class="brand-text font-weight-light">Bro Service</span>
   </a>
 
