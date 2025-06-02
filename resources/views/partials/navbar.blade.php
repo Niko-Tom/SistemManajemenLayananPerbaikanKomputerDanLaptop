@@ -13,13 +13,13 @@
       <a href="{{ url('/pelanggan') }}" class="nav-link">Pelanggan</a>
     </li>
     <li class="nav-item">
-      <a href="{{ url('#') }}" class="nav-link">Layanan</a>
+      <a href="{{ url('/layanan') }}" class="nav-link">Layanan</a>
     </li>
     <li class="nav-item">
-      <a href="{{ url('#') }}" class="nav-link">Transaksi</a>
+      <a href="{{ url('/transaksi') }}" class="nav-link">Transaksi</a>
     </li>
     <li class="nav-item">
-      <a href="{{ url('#') }}" class="nav-link">Detail Transaksi</a>
+      <a href="{{ url('/detailTransaksi') }}" class="nav-link">Detail Transaksi</a>
     </li>
   </ul>
 
@@ -63,7 +63,7 @@
                 Bagus Winata
                 <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
               </h3>
-              <p class="text-sm">Assalamualaikum, selamat pagi...</p>
+              <p class="text-sm">Assalamualaikum, selamat...</p>
               <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Jam Yang Lalu</p>
             </div>
           </div>
@@ -98,10 +98,10 @@
       </a>
     </li>
 
-    <!-- Control Sidebar -->
+    <!-- Theme Toggle -->
     <li class="nav-item">
-      <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-        <i class="fas fa-th-large"></i>
+      <a class="nav-link" href="#" role="button" id="theme-toggle">
+        <i class="fas fa-moon"></i>
       </a>
     </li>
   </ul>

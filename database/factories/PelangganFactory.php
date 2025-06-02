@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Pelanggan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,6 +15,8 @@ class PelangganFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = Pelanggan::class;
+    
     public function definition(): array
     {
         return [

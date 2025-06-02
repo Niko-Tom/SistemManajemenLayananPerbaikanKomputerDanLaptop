@@ -2,14 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Pelanggan;
+use App\Models\Layanan;
+use App\Models\Transaksi;
+use App\Models\DetailTransaksi;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 
 class PelangganController extends Controller
 {
-    public function index() 
+    public function index(Request $request) 
     {
-        $pelanggan = Pelanggan::all();
+        $query = Pelanggan::query();
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->whereRaw('LOWER(nama) LIKE ?', ['%' . strtolower($search) . '%'])
+                  ->orWhereRaw('CAST(id AS CHAR) LIKE ?', ['%' . $search . '%'])
+                  ->orWhereRaw('LOWER(keluhan) LIKE ?', ['%' . strtolower($search) . '%']);
+        }
+
+        $pelanggan = $query->get();
         return view('pelanggan.index', compact('pelanggan'));
     }
 
@@ -26,15 +40,55 @@ class PelangganController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nama' => 'required|string|min:10|max:30',
-            'email' => 'required|email|max:50',
-            'telepon' => 'required|string|min:11|max:15',
-            'keluhan' => 'nullable|string|max:100',
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'nullable|email',
+            'telepon' => 'required|string|max:20',
+            'keluhan' => 'nullable|string',
         ]);
 
-        Pelanggan::create($validated);
-        return redirect('/pelanggan')->with('success', 'Data berhasil ditambahkan');
+        DB::beginTransaction();
+
+        try {
+            // Simpan data pelanggan
+            $pelanggan = Pelanggan::create($request->only('nama', 'email', 'telepon', 'keluhan'));
+
+            // Simpan data layanan (ID otomatis oleh model)
+            $layanan = Layanan::create([
+                'id_pelanggan' => $pelanggan->id,
+                'jenis_kerusakan' => $request->keluhan ?? 'Belum Diisi',
+                'tanggal_masuk' => now(),
+                'catatan' => null,
+                'harga' => 0,
+            ]);
+
+            // Ambil admin pertama
+            $admin = Admin::first();
+            if (!$admin) {
+                throw new \Exception('Data admin tidak tersedia. Tambahkan admin terlebih dahulu.');
+            }
+
+            // Simpan data transaksi (ID otomatis oleh model)
+            $transaksi = Transaksi::create([
+                'id_pelanggan' => $pelanggan->id,
+                'id_layanan' => $layanan->id_layanan,
+                'id_admin' => $admin->id_admin,
+                'total_harga' => 0,
+            ]);
+
+            // Simpan data detail transaksi (ID otomatis oleh model)
+            DetailTransaksi::create([
+                'id_transaksi' => $transaksi->id_transaksi,
+                'keterangan' => 'Belum Diatur',
+            ]);
+
+            DB::commit();
+
+            return redirect('/pelanggan')->with('success', 'Data berhasil ditambahkan');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
+        }
     }
 
     public function edit($id)
@@ -46,12 +100,14 @@ class PelangganController extends Controller
     public function update(Request $request, $id)
     {
         $pelanggan = Pelanggan::findOrFail($id);
+
         $validated = $request->validate([
             'nama' => 'required|string|min:10|max:30',
             'email' => 'required|email|max:50',
             'telepon' => 'required|string|min:11|max:15',
             'keluhan' => 'nullable|string|max:100',
         ]);
+
         $pelanggan->update($validated);
         return redirect('/pelanggan')->with('success', 'Data berhasil diperbarui');
     }

@@ -85,5 +85,45 @@
     });
   });
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const icon = toggle?.querySelector('i');
+
+    // Apply saved theme on page load
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      body.classList.add('dark-mode');
+      if (icon) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      }
+    }
+
+    // Toggle on click
+    toggle?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isDark = body.classList.toggle('dark-mode');
+
+      if (icon) {
+        icon.classList.toggle('fa-moon', !isDark);
+        icon.classList.toggle('fa-sun', isDark);
+      }
+
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+  });
+</script>
+@push('scripts')
+<script>
+  $(function () {
+    $("#transaksiTable").DataTable({
+      "responsive": true,
+      "autoWidth": false,
+    });
+  });
+</script>
+@endpush
 </body>
 </html>

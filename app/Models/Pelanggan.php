@@ -13,6 +13,16 @@ class Pelanggan extends Model
     
     protected $fillable = ['nama', 'email', 'telepon', 'keluhan'];
 
+    public function layanan()
+    {
+        return $this->hasMany(Layanan::class, 'id_pelanggan', 'id');
+    }
+
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'id_pelanggan', 'id');
+    }
+
     protected static function getAll()
     {
         return Pelanggan::all();

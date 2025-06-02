@@ -1,7 +1,13 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\LayananController;
+use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\DetailTransaksiController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +26,8 @@ Route::get('/', function () {
 
 Route::resource('pelanggan', PelangganController::class);
 Route::get('/pelanggan/{id}/delete', [PelangganController::class, 'delete'])->name('pelanggan.delete');
+Route::resource('admin', AdminController::class);
+Route::get('/admin/{id}/delete', [AdminController::class, 'delete'])->name('admin.delete');
+Route::resource('layanan', LayananController::class);
+Route::resource('transaksi', TransaksiController::class);
+Route::resource('detailTransaksi', DetailTransaksiController::class);
