@@ -13,10 +13,11 @@ return new class extends Migration
             $table->string('id_admin')->primary();
             $table->string('nama_admin');
             $table->string('kontak');
+            $table->string('password');
+            $table->enum('role', ['Admin', 'Manager', 'Staff'])->default('Staff');;
             $table->timestamps();
         });
 
-        $this->callSeeder();
     }
 
     private function callSeeder(): void

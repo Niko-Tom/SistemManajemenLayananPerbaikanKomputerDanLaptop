@@ -21,6 +21,15 @@
           <input type="text" name="kontak" class="form-control" value="{{ $admin->kontak }}" required>
         </div>
 
+        <div class="mb-3">
+          <label for="role" class="form-label">Role</label>
+          <select name="role" class="form-control" required>
+            <option value="Admin" {{ $admin->role === 'Admin' ? 'selected' : '' }}>Admin</option>
+            <option value="Manager" {{ $admin->role === 'Manager' ? 'selected' : '' }}>Manager</option>
+            <option value="Staff" {{ $admin->role === 'Staff' ? 'selected' : '' }}>Staff</option>
+          </select>
+        </div>
+
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{{ url('/admin') }}" class="btn btn-secondary">Batal</a>
       </form>

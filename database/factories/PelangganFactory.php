@@ -23,7 +23,7 @@ class PelangganFactory extends Factory
             'nama' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'telepon' => $this->faker->phoneNumber(),
-            'keluhan' => $this->faker->sentence(7),
+            'keluhan' => $this->faker->sentence(5),
             'created_at' => now(),
             'updated_at' => now(),
         ];

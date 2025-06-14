@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Hash;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
@@ -23,11 +24,15 @@ class AdminController extends Controller
         $request->validate([
             'nama_admin' => 'required|string|max:100',
             'kontak' => 'required|string|max:20',
+            'role' => 'required|in:Admin,Manager,Staff',
+            'password' => 'required|string|min:6',
         ]);
 
         Admin::create([
             'nama_admin' => $request->nama_admin,
             'kontak' => $request->kontak,
+            'role' => $request->role,
+            'password' => Hash::make($request->password),
         ]);
 
         return redirect()->route('admin.index')->with('success', 'Admin berhasil ditambahkan.');
@@ -50,12 +55,14 @@ class AdminController extends Controller
         $request->validate([
             'nama_admin' => 'required|string|max:100',
             'kontak' => 'required|string|max:20',
+            'role' => 'required|in:Admin,Manager,Staff',
         ]);
 
         $admin = Admin::findOrFail($id);
         $admin->update([
             'nama_admin' => $request->nama_admin,
             'kontak' => $request->kontak,
+            'role' => $request->role,
         ]);
 
         return redirect()->route('admin.index')->with('success', 'Admin berhasil diperbarui.');

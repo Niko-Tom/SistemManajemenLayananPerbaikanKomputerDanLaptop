@@ -27,7 +27,6 @@ return new class extends Migration
                   ->onDelete('cascade');
         });
 
-        $this->callSeeder();
     }
 
     private function callSeeder(): void

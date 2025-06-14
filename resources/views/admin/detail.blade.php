@@ -4,7 +4,6 @@
 
 @section('content')
 @php
-  // Array nama file gambar
   $photos = ['user1-128x128.jpg', 'user2-160x160.jpg', 'user3-128x128.jpg', 'user4-128x128.jpg', 'user5-128x128.jpg', 'user6-128x128.jpg', 'user7-128x128.jpg', 'user8-128x128.jpg', 'photo3.jpg'];
   $randomPhoto = $photos[$admin->id_admin ? hexdec(substr(md5($admin->id_admin), 0, 2)) % count($photos) : rand(0, count($photos)-1)];
 @endphp
@@ -19,6 +18,7 @@
         <hr>
         <p><strong>ID Admin:</strong> {{ $admin->id_admin }}</p>
         <p><strong>Kontak:</strong> {{ $admin->kontak }}</p>
+        <p><strong>Role:</strong> {{ $admin->role }}</p>
 
         <a href="{{ url('/admin') }}" class="btn btn-secondary">← Kembali</a>
         <a href="{{ url('/admin/'.$admin->id_admin.'/edit') }}" class="btn btn-warning">Edit</a>

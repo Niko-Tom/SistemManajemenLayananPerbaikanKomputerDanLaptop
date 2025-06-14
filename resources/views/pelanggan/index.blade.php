@@ -22,7 +22,7 @@
   <div class="card shadow" style="max-height: 500px; overflow-y: auto;">
     <div class="card-body p-0">
       <table class="table table-bordered table-hover mb-0">
-        <thead class="table-light">
+        <thead class="table-light" style="position: sticky; top: 0; z-index: 10;">
           <tr>
             <th>ID</th>
             <th>Nama</th>

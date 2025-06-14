@@ -19,7 +19,7 @@ class PelangganController extends Controller
         if ($request->has('search')) {
             $search = $request->search;
             $query->whereRaw('LOWER(nama) LIKE ?', ['%' . strtolower($search) . '%'])
-                  ->orWhereRaw('CAST(id AS CHAR) LIKE ?', ['%' . $search . '%'])
+                  ->orWhereRaw("TO_CHAR(id) LIKE ?", ['%' . $search . '%'])
                   ->orWhereRaw('LOWER(keluhan) LIKE ?', ['%' . strtolower($search) . '%']);
         }
 
