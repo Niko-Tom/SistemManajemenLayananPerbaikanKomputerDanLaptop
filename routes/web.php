@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailTransaksiController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,11 @@ use App\Http\Controllers\Auth\AdminLoginController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/upload', [ImageController::class, 'create']);
+Route::post('/upload', [ImageController::class, 'store'])->name('image.upload');
+Route::delete('/upload/{id}', [ImageController::class, 'destroy'])->name('image.delete');
+
 Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AdminLoginController::class, 'login']);
 Route::post('/logout', [AdminLoginController::class, 'logout'])->name('logout');

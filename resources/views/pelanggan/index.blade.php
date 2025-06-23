@@ -5,7 +5,15 @@
 @section('content')
 <div class="container mt-4">
   <h2 class="mb-4">Daftar Pelanggan</h2>
+  
+    {{-- Tampilkan pesan error --}}
+  @if(session('error'))
+    <div class="alert alert-danger">
+      {{ session('error') }}
+    </div>
+  @endif
 
+  {{-- Tampilkan pesan sukses --}}
   @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
   @endif

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pelanggan;
 use App\Models\Layanan;
@@ -29,8 +30,12 @@ class PelangganController extends Controller
 
     public function show($id) 
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.detail', compact('pelanggan'));
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
+            return view('pelanggan.detail', compact('pelanggan'));
+        } catch (ModelNotFoundException $e) {
+            return redirect('/pelanggan')->with('error', 'Data pelanggan tidak ditemukan');
+        }
     }
 
     public function create()
@@ -93,8 +98,12 @@ class PelangganController extends Controller
 
     public function edit($id)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.edit', compact('pelanggan'));
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
+            return view('pelanggan.edit', compact('pelanggan'));
+        } catch (ModelNotFoundException $e) {
+            return redirect('/pelanggan')->with('error', 'Data pelanggan tidak ditemukan untuk diedit.');
+        }
     }
 
     public function update(Request $request, $id)
