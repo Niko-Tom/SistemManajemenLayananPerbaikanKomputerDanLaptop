@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pelanggan;
@@ -89,9 +90,25 @@ class PelangganController extends Controller
 
             DB::commit();
 
+            // LOG INFO
+            Log::info('Pelanggan baru ditambahkan', [
+                'nama' => $pelanggan->nama,
+                'id' => $pelanggan->id,
+            ]);
+
             return redirect('/pelanggan')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             DB::rollBack();
+
+            // LOG ERROR
+            Log::error('Gagal menyimpan data pelanggan', [
+                'error' => $e->getMessage(),
+                'request' => $request->all(),
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            
             return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
     }
