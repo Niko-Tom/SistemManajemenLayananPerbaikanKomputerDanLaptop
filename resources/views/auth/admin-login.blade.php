@@ -20,15 +20,16 @@
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg">Login sebagai Admin</p>
-
-      @if($errors->has('login_error'))
-        <div class="alert alert-danger">{{ $errors->first('login_error') }}</div>
-      @endif
-
+        @if($errors->has('login_error'))
+          <div class="alert alert-danger">{{ $errors->first('login_error') }}</div>
+        @endif
+        @if(session('success'))
+          <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
       <form action="{{ url('/login') }}" method="post">
         @csrf
         <div class="input-group mb-3">
-          <input type="text" name="id_admin" class="form-control" placeholder="ID Admin">
+          <input type="text" name="id_admin" class="form-control" placeholder="ID Admin" value="{{ old('id_admin') }}">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>

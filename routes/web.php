@@ -35,15 +35,16 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->middleware('cek.admin.transaksi');
     Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->middleware('cek.admin.transaksi');
 
-    // Transaksi index bisa diakses semua role admin
-    Route::resource('transaksi', TransaksiController::class)->only(['index']);
+    // Transaksi index, edit & update bisa diakses (edit dibatasi via middleware)
+    Route::resource('transaksi', TransaksiController::class)->only(['index', 'edit', 'update']);
 
     Route::resource('pelanggan', PelangganController::class);
     Route::get('/pelanggan/{id}/delete', [PelangganController::class, 'delete'])->name('pelanggan.delete');
     Route::resource('admin', AdminController::class);
     Route::get('/admin/{id}/delete', [AdminController::class, 'delete'])->name('admin.delete');
     Route::resource('layanan', LayananController::class);
-    Route::resource('detailTransaksi', DetailTransaksiController::class);
+    Route::resource('detailTransaksi', DetailTransaksiController::class)->only(['index', 'edit', 'update', 'show']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 // Halaman akses ditolak untuk role 'Admin' saat akses detail/edit transaksi
@@ -52,5 +53,5 @@ Route::get('/akses-ditolak', function () {
 })->name('akses-ditolak');
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });

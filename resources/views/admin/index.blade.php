@@ -5,8 +5,13 @@
 @section('content')
 <section class="content">
   <div class="container-fluid">
+    <h2 class="mb-4">Daftar Admin</h2>
+    
     @if(session('success'))
       <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+      <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
     <div class="d-flex justify-content-between align-items-center mb-3">

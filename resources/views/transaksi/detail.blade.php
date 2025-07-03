@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Transaksi')
+@section('title', 'Transaksi')
 
 @section('content')
 <section class="content-header">
@@ -8,12 +8,6 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1>Invoice</h1>
-      </div>
-      <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="/">Home</a></li>
-          <li class="breadcrumb-item active">Invoice</li>
-        </ol>
       </div>
     </div>
   </div>
@@ -61,7 +55,6 @@
               <b>ID Transaksi:</b> {{ $transaksi->id_transaksi }}<br>
               <b>ID Layanan:</b> {{ $transaksi->id_layanan }}<br>
               <b>Jatuh Tempo:</b> {{ date('d/m/Y', strtotime($transaksi->created_at . ' +3 days')) }}<br>
-              <b>Status:</b> <span class="badge badge-success">Lunas</span>
             </div>
           </div>
 
@@ -108,16 +101,8 @@
               <div class="table-responsive">
                 <table class="table">
                   <tr>
-                    <th>Subtotal:</th>
-                    <td>Rp {{ number_format($transaksi->layanan->harga, 0, ',', '.') }}</td>
-                  </tr>
-                  <tr>
-                    <th>PPN (10%):</th>
-                    <td>Rp {{ number_format($transaksi->layanan->harga * 0.10, 0, ',', '.') }}</td>
-                  </tr>
-                  <tr>
                     <th>Total:</th>
-                    <td><strong>Rp {{ number_format($transaksi->layanan->harga * 1.10, 0, ',', '.') }}</strong></td>
+                    <td><strong>Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</strong></td>
                   </tr>
                 </table>
               </div>

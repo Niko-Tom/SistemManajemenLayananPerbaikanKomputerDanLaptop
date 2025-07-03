@@ -7,6 +7,15 @@
   <h2 class="mb-4">Edit Layanan</h2>
   <div class="card">
     <div class="card-body">
+      @if ($errors->any())
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
       <form action="{{ route('layanan.update', $layanan->id_layanan) }}" method="POST">
         @csrf
         @method('PUT')
@@ -18,22 +27,22 @@
 
         <div class="mb-3">
           <label for="jenis_kerusakan" class="form-label">Jenis Kerusakan</label>
-          <input type="text" name="jenis_kerusakan" class="form-control" value="{{ $layanan->jenis_kerusakan }}" required>
+          <input type="text" name="jenis_kerusakan" class="form-control" value="{{ old('jenis_kerusakan', $layanan->jenis_kerusakan) }}" required>
         </div>
 
         <div class="mb-3">
           <label for="tanggal_masuk" class="form-label">Tanggal Masuk</label>
-          <input type="date" name="tanggal_masuk" class="form-control" value="{{ $layanan->tanggal_masuk }}" required>
+          <input type="date" name="tanggal_masuk" class="form-control" value="{{ old('tanggal_masuk', $layanan->tanggal_masuk) }}" required>
         </div>
 
         <div class="mb-3">
           <label for="catatan" class="form-label">Catatan</label>
-          <textarea name="catatan" class="form-control" rows="3">{{ $layanan->catatan }}</textarea>
+          <textarea name="catatan" class="form-control" rows="3">{{ old('catatan', $layanan->catatan) }}</textarea>
         </div>
 
         <div class="mb-3">
           <label for="harga" class="form-label">Harga</label>
-          <input type="number" name="harga" class="form-control" value="{{ $layanan->harga }}" min="0" required>
+          <input type="number" name="harga" class="form-control" value="{{ old('harga', $layanan->harga) }}" min="0" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>

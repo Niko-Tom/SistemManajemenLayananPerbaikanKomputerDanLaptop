@@ -7,6 +7,15 @@
   <h2 class="mb-4">Edit Detail Transaksi</h2>
   <div class="card">
     <div class="card-body">
+      @if ($errors->any())
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
       <form action="{{ url('/detailTransaksi/'.$detail->id_detail) }}" method="POST">
         @csrf
         @method('PUT')
@@ -18,7 +27,7 @@
 
         <div class="mb-3">
           <label for="keterangan" class="form-label">Keterangan</label>
-          <textarea name="keterangan" class="form-control" rows="4" required>{{ $detail->keterangan }}</textarea>
+          <textarea name="keterangan" class="form-control" rows="4" required>{{ old('keterangan', $detail->keterangan) }}</textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>

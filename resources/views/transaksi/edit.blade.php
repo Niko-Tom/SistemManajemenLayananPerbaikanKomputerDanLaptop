@@ -55,13 +55,19 @@
             </div>
 
             <div class="mb-3">
-              <label>Admin</label>
-              <input type="text" class="form-control" value="{{ $transaksi->admin->nama_admin }}" disabled>
+              <label for="id_admin">Petugas</label>
+              <select name="id_admin" id="id_admin" class="form-control" required>
+                @foreach ($adminStaff as $a)
+                  <option value="{{ $a->id_admin }}" {{ old('id_admin', $transaksi->id_admin) == $a->id_admin ? 'selected' : '' }}>
+                    {{ $a->nama_admin }} ({{ $a->id_admin }})
+                  </option>
+                @endforeach
+              </select>
             </div>
 
             <div class="mb-3">
               <label for="total_harga">Total Harga</label>
-              <input type="number" name="total_harga" class="form-control" value="{{ $transaksi->total_harga }}" required>
+              <input type="number" name="total_harga" class="form-control" value="{{ old('total_harga', $transaksi->total_harga) }}" required>
             </div>
 
             <button type="submit" class="btn btn-success">Simpan Perubahan</button>

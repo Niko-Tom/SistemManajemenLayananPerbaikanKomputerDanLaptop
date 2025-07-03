@@ -14,33 +14,45 @@ use Illuminate\Http\Request;
 
 class PelangganController extends Controller
 {
-    public function index(Request $request) 
+    public function index(Request $request)
     {
-        $query = Pelanggan::query();
+        try {
+            $query = Pelanggan::query();
 
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->whereRaw('LOWER(nama) LIKE ?', ['%' . strtolower($search) . '%'])
-                  ->orWhereRaw("TO_CHAR(id) LIKE ?", ['%' . $search . '%'])
-                  ->orWhereRaw('LOWER(keluhan) LIKE ?', ['%' . strtolower($search) . '%']);
+            if ($request->has('search')) {
+                $search = $request->search;
+                $query->whereRaw('LOWER(nama) LIKE ?', ['%' . strtolower($search) . '%'])
+                      ->orWhereRaw("CAST(id AS TEXT) LIKE ?", ['%' . $search . '%'])
+                      ->orWhereRaw('LOWER(keluhan) LIKE ?', ['%' . strtolower($search) . '%']);
+            }
+
+            $pelanggan = $query->get();
+
+            Log::info('Halaman index pelanggan diakses', ['total_data' => $pelanggan->count()]);
+            return view('pelanggan.index', compact('pelanggan'));
+        } catch (\Exception $e) {
+            Log::error('Gagal memuat halaman index pelanggan', [
+                'error' => $e->getMessage()
+            ]);
+            return redirect('/')->with('error', 'Gagal menampilkan data pelanggan.');
         }
-
-        $pelanggan = $query->get();
-        return view('pelanggan.index', compact('pelanggan'));
     }
 
-    public function show($id) 
+    public function show($id)
     {
         try {
             $pelanggan = Pelanggan::findOrFail($id);
+            Log::info('Menampilkan detail pelanggan', ['id' => $id]);
             return view('pelanggan.detail', compact('pelanggan'));
         } catch (ModelNotFoundException $e) {
+            Log::warning('Pelanggan tidak ditemukan saat akses detail', ['id' => $id]);
             return redirect('/pelanggan')->with('error', 'Data pelanggan tidak ditemukan');
         }
     }
 
     public function create()
     {
+        Log::info('Halaman form tambah pelanggan diakses');
         return view('pelanggan.create');
     }
 
@@ -49,17 +61,15 @@ class PelangganController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'nullable|email',
-            'telepon' => 'required|string|max:20',
+            'telepon' => 'required|string|min:11|max:20',
             'keluhan' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
 
         try {
-            // Simpan data pelanggan
             $pelanggan = Pelanggan::create($request->only('nama', 'email', 'telepon', 'keluhan'));
 
-            // Simpan data layanan (ID otomatis oleh model)
             $layanan = Layanan::create([
                 'id_pelanggan' => $pelanggan->id,
                 'jenis_kerusakan' => $request->keluhan ?? 'Belum Diisi',
@@ -68,13 +78,11 @@ class PelangganController extends Controller
                 'harga' => 0,
             ]);
 
-            // Ambil admin pertama
             $admin = Admin::first();
             if (!$admin) {
-                throw new \Exception('Data admin tidak tersedia. Tambahkan admin terlebih dahulu.');
+                throw new \Exception('Admin tidak tersedia.');
             }
 
-            // Simpan data transaksi (ID otomatis oleh model)
             $transaksi = Transaksi::create([
                 'id_pelanggan' => $pelanggan->id,
                 'id_layanan' => $layanan->id_layanan,
@@ -82,33 +90,21 @@ class PelangganController extends Controller
                 'total_harga' => 0,
             ]);
 
-            // Simpan data detail transaksi (ID otomatis oleh model)
             DetailTransaksi::create([
                 'id_transaksi' => $transaksi->id_transaksi,
                 'keterangan' => 'Belum Diatur',
             ]);
 
             DB::commit();
-
-            // LOG INFO
-            Log::info('Pelanggan baru ditambahkan', [
-                'nama' => $pelanggan->nama,
-                'id' => $pelanggan->id,
-            ]);
-
+            Log::info('Pelanggan baru berhasil ditambahkan', ['id' => $pelanggan->id]);
             return redirect('/pelanggan')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             DB::rollBack();
-
-            // LOG ERROR
             Log::error('Gagal menyimpan data pelanggan', [
                 'error' => $e->getMessage(),
                 'request' => $request->all(),
-                'trace' => $e->getTraceAsString(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
             ]);
-            
             return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
     }
@@ -117,16 +113,16 @@ class PelangganController extends Controller
     {
         try {
             $pelanggan = Pelanggan::findOrFail($id);
+            Log::info('Akses halaman edit pelanggan', ['id' => $id]);
             return view('pelanggan.edit', compact('pelanggan'));
         } catch (ModelNotFoundException $e) {
+            Log::warning('Pelanggan tidak ditemukan saat edit', ['id' => $id]);
             return redirect('/pelanggan')->with('error', 'Data pelanggan tidak ditemukan untuk diedit.');
         }
     }
 
     public function update(Request $request, $id)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-
         $validated = $request->validate([
             'nama' => 'required|string|min:10|max:30',
             'email' => 'required|email|max:50',
@@ -134,20 +130,52 @@ class PelangganController extends Controller
             'keluhan' => 'nullable|string|max:100',
         ]);
 
-        $pelanggan->update($validated);
-        return redirect('/pelanggan')->with('success', 'Data berhasil diperbarui');
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
+            $pelanggan->update($validated);
+
+            Log::info('Data pelanggan diperbarui', ['id' => $id]);
+            return redirect('/pelanggan')->with('success', 'Data berhasil diperbarui');
+        } catch (ModelNotFoundException $e) {
+            Log::warning('Gagal update - pelanggan tidak ditemukan', ['id' => $id]);
+            return redirect('/pelanggan')->with('error', 'Data pelanggan tidak ditemukan untuk diupdate.');
+        } catch (\Exception $e) {
+            Log::error('Terjadi kesalahan saat update pelanggan', [
+                'error' => $e->getMessage(),
+                'id' => $id
+            ]);
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat update data.');
+        }
     }
 
     public function delete($id)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.delete', compact('pelanggan'));
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
+            Log::info('Akses halaman konfirmasi hapus pelanggan', ['id' => $id]);
+            return view('pelanggan.delete', compact('pelanggan'));
+        } catch (ModelNotFoundException $e) {
+            Log::warning('Pelanggan tidak ditemukan saat akses halaman hapus', ['id' => $id]);
+            return redirect('/pelanggan')->with('error', 'Data pelanggan tidak ditemukan untuk dihapus.');
+        }
     }
 
     public function destroy($id)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        $pelanggan->delete();
-        return redirect('/pelanggan')->with('success', 'Data berhasil dihapus');
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
+            $pelanggan->delete();
+            Log::info('Pelanggan berhasil dihapus', ['id' => $id]);
+            return redirect('/pelanggan')->with('success', 'Data berhasil dihapus');
+        } catch (ModelNotFoundException $e) {
+            Log::warning('Gagal hapus - pelanggan tidak ditemukan', ['id' => $id]);
+            return redirect('/pelanggan')->with('error', 'Data pelanggan tidak ditemukan.');
+        } catch (\Exception $e) {
+            Log::error('Terjadi kesalahan saat menghapus pelanggan', [
+                'error' => $e->getMessage(),
+                'id' => $id
+            ]);
+            return redirect('/pelanggan')->with('error', 'Terjadi kesalahan saat menghapus data.');
+        }
     }
 }

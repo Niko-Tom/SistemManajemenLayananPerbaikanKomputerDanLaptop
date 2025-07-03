@@ -23,6 +23,7 @@
 </style>
 
 </head>
+  
 <body class="hold-transition sidebar-mini layout-fixed">
 <!-- Loader -->
 <div id="loader-overlay">
@@ -125,5 +126,6 @@
   });
 </script>
 @endpush
+@stack('scripts')
 </body>
 </html>

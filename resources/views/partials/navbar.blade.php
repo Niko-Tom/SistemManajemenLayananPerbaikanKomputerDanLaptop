@@ -7,7 +7,7 @@
       <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
     </li>
     <li class="nav-item">
-      <a href="{{ url('#') }}" class="nav-link">Dashboard</a>
+      <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
     </li>
     <li class="nav-item">
       <a href="{{ url('/pelanggan') }}" class="nav-link">Pelanggan</a>
