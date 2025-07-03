@@ -74,7 +74,7 @@ class TransaksiController extends Controller
             $transaksi = Transaksi::where('id_transaksi', $id)->firstOrFail();
 
             $request->validate([
-                'total_harga' => 'required|numeric|min:0',
+                'total_harga' => 'required|numeric|min:0|max:999999999',
                 'id_admin' => 'required|exists:admins,id_admin',
             ]);
 
